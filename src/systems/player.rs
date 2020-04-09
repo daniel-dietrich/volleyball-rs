@@ -1,5 +1,7 @@
-use crate::components::player::{Player, Side, PLAYER_WIDTH};
-use crate::volleyball::ARENA_WIDTH;
+use crate::{
+    components::player::{Player, Side, PLAYER_WIDTH},
+    volleyball::WINDOW_WIDTH,
+};
 use amethyst::{
     core::{Time, Transform},
     derive::SystemDesc,
@@ -37,14 +39,14 @@ impl<'s> System<'s> for PlayerSystem {
 
                 let left_limit = match player.side {
                     Side::Left => 0.0,
-                    Side::Right => ARENA_WIDTH / 2.0,
+                    Side::Right => WINDOW_WIDTH / 2.0,
                 };
 
                 if mv_amount != 0.0 {
                     transform.set_translation_x(
                         (player_x + scaled_amount)
                             .max(left_limit + PLAYER_WIDTH / 2.0)
-                            .min(left_limit + ARENA_WIDTH / 2.0 - PLAYER_WIDTH / 2.0),
+                            .min(left_limit + WINDOW_WIDTH / 2.0 - PLAYER_WIDTH / 2.0),
                     );
                 }
             }

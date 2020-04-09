@@ -14,8 +14,8 @@ use amethyst::{
     ui::{Anchor, TtfFormat, UiText, UiTransform},
 };
 
-pub const ARENA_HEIGHT: f32 = 500.0;
-pub const ARENA_WIDTH: f32 = 500.0;
+pub const WINDOW_HEIGHT: f32 = 500.0;
+pub const WINDOW_WIDTH: f32 = 500.0;
 
 #[derive(Default)]
 pub struct ScoreBoard {
@@ -32,11 +32,13 @@ pub struct Volleyball;
 impl SimpleState for Volleyball {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
-        let sprite_sheet_handle = load_sprite_sheet(world);
+        let objects_sprite_sheet_handle = load_sprite_sheet(world, "spritesheet");
+        let background_sprite_sheet_handle = load_sprite_sheet(world, "background");
 
         initialize_camera(world);
-        initialize_ball(world, sprite_sheet_handle.clone());
-        initialize_players(world, sprite_sheet_handle);
+        initialize_background(world, background_sprite_sheet_handle);
+        initialize_players(world, objects_sprite_sheet_handle.clone());
+        initialize_ball(world, objects_sprite_sheet_handle.clone());
         initialize_scoreboard(world);
         initialize_audio(world);
     }
@@ -44,11 +46,27 @@ impl SimpleState for Volleyball {
 
 fn initialize_camera(world: &mut World) {
     let mut transform = Transform::default();
-    transform.set_translation_xyz(ARENA_WIDTH * 0.5, ARENA_HEIGHT * 0.5, 1.0);
+    transform.set_translation_xyz(WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0, 1.0);
 
     world
         .create_entity()
-        .with(Camera::standard_2d(ARENA_WIDTH, ARENA_HEIGHT))
+        .with(Camera::standard_2d(WINDOW_WIDTH, WINDOW_HEIGHT))
+        .with(transform)
+        .build();
+}
+
+fn initialize_background(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
+    let mut transform = Transform::default();
+    transform.set_translation_xyz(WINDOW_WIDTH / 2.0, WINDOW_WIDTH / 2.0, -1.0);
+
+    let background_render = SpriteRender {
+        sprite_sheet: sprite_sheet.clone(),
+        sprite_number: 0,
+    };
+
+    world
+        .create_entity()
+        .with(background_render)
         .with(transform)
         .build();
 }
@@ -61,7 +79,7 @@ fn initialize_players(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
     let mut right_transform = Transform::default();
 
     left_transform.set_translation_xyz(offset_x, offset_y, 0.0);
-    right_transform.set_translation_xyz(ARENA_WIDTH - offset_x, offset_y, 0.0);
+    right_transform.set_translation_xyz(WINDOW_WIDTH - offset_x, offset_y, 0.0);
 
     left_transform.set_scale(Vector3::new(2.0, 2.0, 1.0));
     right_transform.set_scale(Vector3::new(2.0, 2.0, 1.0));
@@ -93,7 +111,7 @@ fn initialize_players(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
 
 fn initialize_ball(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let mut transform = Transform::default();
-    transform.set_translation_xyz(ARENA_WIDTH / 2.0, ARENA_HEIGHT / 2.0, 0.0);
+    transform.set_translation_xyz(WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0, 0.0);
     transform.set_scale(amethyst::core::math::Vector3::new(2.0, 2.0, 1.0));
 
     let sprite_render = SpriteRender {
@@ -167,25 +185,22 @@ fn initialize_scoreboard(world: &mut World) {
     });
 }
 
-fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
+fn load_sprite_sheet(world: &mut World, filename: &str) -> Handle<SpriteSheet> {
     let loader = world.read_resource::<Loader>();
+    let png_path = format!("textures/{}.png", filename);
+    let ron_path = format!("textures/{}.ron", filename);
 
     let texture_handle = {
         let texture_storage = world.read_resource::<AssetStorage<Texture>>();
 
-        loader.load(
-            "textures/spritesheet.png",
-            ImageFormat::default(),
-            (),
-            &texture_storage,
-        )
+        loader.load(png_path, ImageFormat::default(), (), &texture_storage)
     };
 
     let sprite_sheet_handle = {
         let sprite_sheet_storage = world.read_resource::<AssetStorage<SpriteSheet>>();
 
         loader.load(
-            "textures/spritesheet.ron",
+            ron_path,
             SpriteSheetFormat(texture_handle),
             (),
             &sprite_sheet_storage,

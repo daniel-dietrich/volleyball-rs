@@ -1,7 +1,7 @@
 use crate::{
     audio::{play_sound, Sounds},
     components::ball::{Ball, BALL_RADIUS},
-    volleyball::{ScoreBoard, ScoreText, ARENA_HEIGHT, ARENA_WIDTH},
+    volleyball::{ScoreBoard, ScoreText, WINDOW_HEIGHT, WINDOW_WIDTH},
 };
 use amethyst::{
     assets::AssetStorage,
@@ -58,7 +58,7 @@ impl<'s> System<'s> for WinnerSystem {
                     audio_output.as_ref().map(|o| o.deref()),
                 );
 
-                if ball_x < (ARENA_WIDTH / 2.0) {
+                if ball_x < (WINDOW_WIDTH / 2.0) {
                     score.player_2 = (score.player_2 + 1).min(99);
 
                     if let Some(text) = ui_text.get_mut(score_text.player_2) {
@@ -72,7 +72,7 @@ impl<'s> System<'s> for WinnerSystem {
                     }
                 }
 
-                transform.set_translation_xyz(ARENA_WIDTH / 2.0, ARENA_HEIGHT / 2.0, 0.0);
+                transform.set_translation_xyz(WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0, 0.0);
                 ball.reset_y();
                 ball.reverse_x();
             }

@@ -4,7 +4,7 @@ use crate::{
         ball::{Ball, BALL_RADIUS},
         player::{Player, Side},
     },
-    volleyball::ARENA_WIDTH,
+    volleyball::WINDOW_WIDTH,
 };
 use amethyst::{
     assets::AssetStorage,
@@ -17,7 +17,7 @@ use rand::Rng;
 use std::ops::Deref;
 
 const LEFT_EDGE: f32 = BALL_RADIUS;
-const RIGHT_EDGE: f32 = ARENA_WIDTH - BALL_RADIUS;
+const RIGHT_EDGE: f32 = WINDOW_WIDTH - BALL_RADIUS;
 
 #[derive(SystemDesc)]
 pub struct BounceSystem;
