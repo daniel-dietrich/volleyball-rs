@@ -27,7 +27,6 @@ impl<'s> System<'s> for BallSystem {
             let transform: &mut Transform = transform;
             let ball: &mut Ball = ball;
 
-            // Rotation
             transform.rotate_2d(ROTATION);
 
             // Gravity

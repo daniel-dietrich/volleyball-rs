@@ -2,7 +2,7 @@ use crate::{
     audio::initialize_audio,
     components::{
         ball::Ball,
-        player::{Player, Side, PLAYER_HEIGHT, PLAYER_WIDTH},
+        player::{Player, Side, PLAYER_HEIGHT},
     },
 };
 use amethyst::{
@@ -72,7 +72,7 @@ fn initialize_background(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
 }
 
 fn initialize_players(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
-    let offset_x = PLAYER_WIDTH / 2.0;
+    let offset_x = WINDOW_WIDTH / 4.0;
     let offset_y = PLAYER_HEIGHT / 2.0;
 
     let mut left_transform = Transform::default();
@@ -138,18 +138,18 @@ fn initialize_scoreboard(world: &mut World) {
         -50.0,
         -50.0,
         1.0,
-        200.0,
+        50.0,
         50.0,
     );
 
     let p2_transform = UiTransform::new(
         String::from("P2"),
         Anchor::TopMiddle,
-        Anchor::TopMiddle,
+        Anchor::Middle,
         50.0,
         -50.0,
         1.0,
-        200.0,
+        50.0,
         50.0,
     );
 

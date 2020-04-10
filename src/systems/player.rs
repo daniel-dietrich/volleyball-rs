@@ -34,19 +34,19 @@ impl<'s> System<'s> for PlayerSystem {
             };
 
             if let Some(mv_amount) = movement {
-                let scaled_amount = PLAYER_SPEED * mv_amount * time.delta_seconds();
                 let player_x = transform.translation().x;
 
-                let left_limit = match player.side {
+                let left_boundary = match player.side {
                     Side::Left => 0.0,
                     Side::Right => WINDOW_WIDTH / 2.0,
                 };
 
                 if mv_amount != 0.0 {
+                    let scaled_amount = PLAYER_SPEED * mv_amount * time.delta_seconds();
                     transform.set_translation_x(
                         (player_x + scaled_amount)
-                            .max(left_limit + PLAYER_WIDTH / 2.0)
-                            .min(left_limit + WINDOW_WIDTH / 2.0 - PLAYER_WIDTH / 2.0),
+                            .max(left_boundary + PLAYER_WIDTH / 2.0)
+                            .min(left_boundary + WINDOW_WIDTH / 2.0 - PLAYER_WIDTH / 2.0),
                     );
                 }
             }

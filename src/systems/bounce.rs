@@ -44,11 +44,11 @@ impl<'s> System<'s> for BounceSystem {
             let ball_y = transform.translation().y;
 
             if ball.heads_left() && ball_x <= LEFT_EDGE {
-                ball.reverse_x();
                 play_sound(&sounds.bounce, &storage, audio_output.as_deref());
+                ball.reverse_x();
             } else if ball.heads_right() && ball_x >= RIGHT_EDGE {
-                ball.reverse_x();
                 play_sound(&sounds.bounce, &storage, audio_output.as_deref());
+                ball.reverse_x();
             }
 
             for (player, transform) in (&players, &transforms).join() {
@@ -62,10 +62,10 @@ impl<'s> System<'s> for BounceSystem {
 
                 if collides_with_player(ball_x, ball_y, player_x, player_y) {
                     if ball.velocity[1] < 0.0 {
-                        ball.reverse_y();
                         play_sound(&sounds.bounce, &storage, audio_output.as_deref());
+                        ball.reverse_y();
 
-                        let random = rand::thread_rng().gen_range(0.5, 1.5);
+                        let random = rand::thread_rng().gen_range(0.75, 1.5);
                         ball.velocity[0] = match player.side {
                             Side::Left => ball.velocity[0].abs() * random,
                             Side::Right => -ball.velocity[0].abs() * random,
