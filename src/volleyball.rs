@@ -7,7 +7,7 @@ use crate::{
 };
 use amethyst::{
     assets::{AssetStorage, Handle, Loader},
-    core::{math::Vector3, transform::Transform},
+    core::transform::Transform,
     ecs::Entity,
     prelude::*,
     renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
@@ -81,17 +81,14 @@ fn initialize_players(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
     left_transform.set_translation_xyz(offset_x, offset_y, 0.0);
     right_transform.set_translation_xyz(WINDOW_WIDTH - offset_x, offset_y, 0.0);
 
-    left_transform.set_scale(Vector3::new(2.0, 2.0, 1.0));
-    right_transform.set_scale(Vector3::new(2.0, 2.0, 1.0));
-
     let left_sprite_render = SpriteRender {
         sprite_sheet: sprite_sheet.clone(),
-        sprite_number: 0,
+        sprite_number: 1,
     };
 
     let right_sprite_render = SpriteRender {
         sprite_sheet: sprite_sheet.clone(),
-        sprite_number: 1,
+        sprite_number: 2,
     };
 
     world
@@ -112,11 +109,10 @@ fn initialize_players(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
 fn initialize_ball(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
     let mut transform = Transform::default();
     transform.set_translation_xyz(WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0, 0.0);
-    transform.set_scale(amethyst::core::math::Vector3::new(2.0, 2.0, 1.0));
 
     let sprite_render = SpriteRender {
         sprite_sheet: sprite_sheet_handle,
-        sprite_number: 2,
+        sprite_number: 0,
     };
 
     world
@@ -129,7 +125,7 @@ fn initialize_ball(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) 
 
 fn initialize_scoreboard(world: &mut World) {
     let font = world.read_resource::<Loader>().load(
-        "font/square.ttf",
+        "font/kenvector_future.ttf",
         TtfFormat,
         (),
         &world.read_resource(),
@@ -138,7 +134,7 @@ fn initialize_scoreboard(world: &mut World) {
     let p1_transform = UiTransform::new(
         String::from("P1"),
         Anchor::TopMiddle,
-        Anchor::TopMiddle,
+        Anchor::Middle,
         -50.0,
         -50.0,
         1.0,

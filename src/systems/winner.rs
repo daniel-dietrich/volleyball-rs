@@ -11,7 +11,6 @@ use amethyst::{
     ecs::prelude::{Join, Read, ReadExpect, System, SystemData, Write, WriteStorage},
     ui::UiText,
 };
-use std::ops::Deref;
 
 const BOTTOM_EDGE: f32 = BALL_RADIUS;
 #[derive(SystemDesc)]
@@ -44,19 +43,15 @@ impl<'s> System<'s> for WinnerSystem {
     ) {
         for (ball, transform) in (&mut balls, &mut transforms).join() {
             // Workaround for intellisense
-            let ball: &mut Ball = ball;
             let transform: &mut Transform = transform;
+            let ball: &mut Ball = ball;
 
             let ball_x = transform.translation().x;
             let ball_y = transform.translation().y;
 
             // Check if and on which side the ball hits the floor
             if ball_y <= BOTTOM_EDGE {
-                play_sound(
-                    &sounds.score,
-                    &storage,
-                    audio_output.as_ref().map(|o| o.deref()),
-                );
+                play_sound(&sounds.score, &storage, audio_output.as_deref());
 
                 if ball_x < (WINDOW_WIDTH / 2.0) {
                     score.player_2 = (score.player_2 + 1).min(99);
@@ -73,7 +68,7 @@ impl<'s> System<'s> for WinnerSystem {
                 }
 
                 transform.set_translation_xyz(WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0, 0.0);
-                ball.reset_y();
+                ball.reset();
                 ball.reverse_x();
             }
         }

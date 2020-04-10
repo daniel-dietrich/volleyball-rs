@@ -6,7 +6,7 @@ use amethyst::{
     ecs::prelude::{Join, Read, System, SystemData, WriteStorage},
 };
 
-const ACCELERATION: f32 = -90.0;
+const ACCELERATION: f32 = -120.0;
 const ROTATION: f32 = 0.05;
 
 #[derive(SystemDesc)]
@@ -24,8 +24,8 @@ impl<'s> System<'s> for BallSystem {
 
         for (ball, transform) in (&mut balls, &mut transforms).join() {
             // Workaround for intellisense
-            let ball: &mut Ball = ball;
             let transform: &mut Transform = transform;
+            let ball: &mut Ball = ball;
 
             // Rotation
             transform.rotate_2d(ROTATION);

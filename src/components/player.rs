@@ -1,7 +1,7 @@
 use amethyst::ecs::{Component, DenseVecStorage};
 
-pub const PLAYER_HEIGHT: f32 = 64.0;
-pub const PLAYER_WIDTH: f32 = 44.0;
+pub const PLAYER_HEIGHT: f32 = 34.0;
+pub const PLAYER_WIDTH: f32 = 40.0;
 
 #[derive(PartialEq, Eq)]
 pub enum Side {

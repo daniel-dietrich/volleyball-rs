@@ -14,7 +14,6 @@ use amethyst::{
     ecs::prelude::{Join, Read, ReadExpect, ReadStorage, System, SystemData, WriteStorage},
 };
 use rand::Rng;
-use std::ops::Deref;
 
 const LEFT_EDGE: f32 = BALL_RADIUS;
 const RIGHT_EDGE: f32 = WINDOW_WIDTH - BALL_RADIUS;
@@ -38,32 +37,25 @@ impl<'s> System<'s> for BounceSystem {
     ) {
         for (ball, transform) in (&mut balls, &transforms).join() {
             // Workaround for intellisense
-            let ball: &mut Ball = ball;
             let transform: &Transform = transform;
+            let ball: &mut Ball = ball;
 
             let ball_x = transform.translation().x;
             let ball_y = transform.translation().y;
 
             if ball.heads_left() && ball_x <= LEFT_EDGE {
                 ball.reverse_x();
-                play_sound(
-                    &sounds.bounce,
-                    &storage,
-                    audio_output.as_ref().map(|o| o.deref()),
-                );
+                play_sound(&sounds.bounce, &storage, audio_output.as_deref());
             } else if ball.heads_right() && ball_x >= RIGHT_EDGE {
                 ball.reverse_x();
-                play_sound(
-                    &sounds.bounce,
-                    &storage,
-                    audio_output.as_ref().map(|o| o.deref()),
-                );
+                play_sound(&sounds.bounce, &storage, audio_output.as_deref());
             }
 
             for (player, transform) in (&players, &transforms).join() {
                 // Workaround for intellisense
-                let player: &Player = player;
                 let transform: &Transform = transform;
+                let ball: &mut Ball = ball;
+                let player: &Player = player;
 
                 let player_x = transform.translation().x - (player.width * 0.5);
                 let player_y = transform.translation().y - (player.height * 0.5);
@@ -71,16 +63,12 @@ impl<'s> System<'s> for BounceSystem {
                 if collides_with_player(ball_x, ball_y, player_x, player_y) {
                     if ball.velocity[1] < 0.0 {
                         ball.reverse_y();
-                        play_sound(
-                            &sounds.bounce,
-                            &storage,
-                            audio_output.as_ref().map(|o| o.deref()),
-                        );
+                        play_sound(&sounds.bounce, &storage, audio_output.as_deref());
 
-                        let mut rng = rand::thread_rng();
+                        let random = rand::thread_rng().gen_range(0.5, 1.5);
                         ball.velocity[0] = match player.side {
-                            Side::Left => ball.velocity[0].abs() * rng.gen_range(0.6, 1.4),
-                            Side::Right => -ball.velocity[0].abs() * rng.gen_range(0.6, 1.4),
+                            Side::Left => ball.velocity[0].abs() * random,
+                            Side::Right => -ball.velocity[0].abs() * random,
                         };
                     }
                 }

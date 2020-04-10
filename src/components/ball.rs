@@ -1,7 +1,7 @@
 use amethyst::ecs::{Component, DenseVecStorage};
 
 pub const BALL_RADIUS: f32 = 4.0;
-const BALL_VELOCITY_X: f32 = 60.0;
+const BALL_VELOCITY_X: f32 = 45.0;
 const BALL_VELOCITY_Y: f32 = 0.0;
 
 pub struct Ball {
@@ -26,8 +26,9 @@ impl Ball {
         }
     }
 
-    pub fn reset_y(&mut self) {
-        self.velocity[1] = 0.0;
+    pub fn reset(&mut self) {
+        self.velocity[0] = BALL_VELOCITY_X;
+        self.velocity[1] = BALL_VELOCITY_Y;
     }
 
     pub fn reverse_x(&mut self) {
